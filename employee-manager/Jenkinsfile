@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'employee-manager-app'
+        CONTAINER_NAME = 'employee-manager-container'
+        APP_PORT = '8081'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'mvn -B clean package -DskipTests'
+                    } else {
+                        bat 'mvn -B clean package -DskipTests'
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'mvn -B test'
+                    } else {
+                        bat 'mvn -B test'
+                    }
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh "docker build -t ${IMAGE_NAME} ."
+                    } else {
+                        bat "docker build -t %IMAGE_NAME% ."
+                    }
+                }
+            }
+        }
+
+        stage('Docker Run') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh "docker rm -f ${CONTAINER_NAME} || true"
+                        sh "docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}"
+                    } else {
+                        bat "powershell -Command \"if ((docker ps -a --format '{{.Names}}' | Select-String -SimpleMatch '${CONTAINER_NAME}') -ne $null) { docker rm -f ${CONTAINER_NAME} }\""
+                        bat "docker run -d --name %CONTAINER_NAME% -p %APP_PORT%:%APP_PORT% %IMAGE_NAME%"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+    }
+}
