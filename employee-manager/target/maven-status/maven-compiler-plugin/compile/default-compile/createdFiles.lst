@@ -1,0 +1,5 @@
+com\antigravity\employeemanager\model\Employee.class
+com\antigravity\employeemanager\EmployeeManagerApplication.class
+com\antigravity\employeemanager\service\EmployeeService.class
+com\antigravity\employeemanager\controller\EmployeeController.class
+com\antigravity\employeemanager\repository\EmployeeRepository.class

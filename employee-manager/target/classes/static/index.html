@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A state-of-the-art, glassmorphic Employee Management System built with Java Spring Boot and H2 Database.">
+    <meta name="author" content="Antigravity">
+    <title>TalentSphere // Enterprise Employee Hub</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">TS</div>
+                <h1 class="logo-text">Talent<span>Sphere</span></h1>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    Dashboard
+                </button>
+                <button class="nav-item" id="nav-directory" onclick="switchTab('directory')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    Employee Directory
+                </button>
+                <button class="nav-item" id="nav-utilities" onclick="switchTab('utilities')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                    Import &amp; Export
+                </button>
+            </div>
+            
+            <div class="sidebar-footer">
+                <a href="/h2-console" target="_blank" class="h2-console-btn">
+                    <svg viewBox="0 0 24 24" class="btn-icon"><path d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zM4 3h16c.55 0 1 .45 1 1v6c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1z"/></svg>
+                    Database (H2 Console)
+                </a>
+                <div class="system-status">
+                    <span class="status-indicator online"></span>
+                    <span>REST API: Online</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Body -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-welcome">
+                    <h2 id="header-title">Enterprise Dashboard</h2>
+                    <p class="header-subtitle">Welcome back, Administrator // Live Metrics Overview</p>
+                </div>
+                <div class="header-controls">
+                    <div id="live-time" class="live-time">00:00:00 AM</div>
+                    <button class="add-employee-btn" id="btn-trigger-add" onclick="openAddModal()">
+                        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        Add Employee
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <section id="view-dashboard" class="tab-view active">
+                <!-- Overview Stats Grid -->
+                <div class="metrics-grid">
+                    <div class="metric-card glass">
+                        <div class="metric-icon-wrapper blue">
+                            <svg viewBox="0 0 24 24" class="m-icon"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        </div>
+                        <div class="metric-data">
+                            <h3 class="metric-value" id="stat-total-employees">-</h3>
+                            <p class="metric-label">Total Employees</p>
+                        </div>
+                        <div class="metric-glow glow-blue"></div>
+                    </div>
+                    
+                    <div class="metric-card glass">
+                        <div class="metric-icon-wrapper green">
+                            <svg viewBox="0 0 24 24" class="m-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                        </div>
+                        <div class="metric-data">
+                            <h3 class="metric-value" id="stat-avg-salary">$0.00</h3>
+                            <p class="metric-label">Average Salary</p>
+                        </div>
+                        <div class="metric-glow glow-green"></div>
+                    </div>
+                    
+                    <div class="metric-card glass">
+                        <div class="metric-icon-wrapper purple">
+                            <svg viewBox="0 0 24 24" class="m-icon"><path d="M12 11.55C9.64 9.35 6.48 8 3 8v11c3.48 0 6.64 1.35 9 3.55 2.36-2.2 5.52-3.55 9-3.55V8c-3.48 0-6.64 1.35-9 3.55zM12 8c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"/></svg>
+                        </div>
+                        <div class="metric-data">
+                            <h3 class="metric-value" id="stat-top-dept">-</h3>
+                            <p class="metric-label">Top Department</p>
+                        </div>
+                        <div class="metric-glow glow-purple"></div>
+                    </div>
+                </div>
+
+                <!-- Analytical Charts Area -->
+                <div class="charts-row">
+                    <div class="chart-card glass">
+                        <div class="chart-header">
+                            <h4>Department Breakdown</h4>
+                            <span class="chart-subtitle">Active headcounts across core divisions</span>
+                        </div>
+                        <div class="chart-container" id="dept-chart-container">
+                            <canvas id="deptChart" width="300" height="200"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card glass">
+                        <div class="chart-header">
+                            <h4>Employee Status Ratios</h4>
+                            <span class="chart-subtitle">Allocation by current status</span>
+                        </div>
+                        <div class="chart-container" id="status-chart-container">
+                            <canvas id="statusChart" width="300" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Directory View -->
+            <section id="view-directory" class="tab-view">
+                <!-- Filters glass box -->
+                <div class="filter-panel glass">
+                    <div class="search-box-wrapper">
+                        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 5 9.5 11.99 5 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <input type="text" id="filter-search" placeholder="Search by name, email, or role..." oninput="onSearchInput()">
+                    </div>
+                    
+                    <div class="filter-dropdowns">
+                        <div class="select-wrapper">
+                            <label for="filter-dept">Department</label>
+                            <select id="filter-dept" onchange="fetchEmployees()">
+                                <option value="All">All Departments</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="HR">HR</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Sales">Sales</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+
+                        <div class="select-wrapper">
+                            <label for="filter-status">Status</label>
+                            <select id="filter-status" onchange="fetchEmployees()">
+                                <option value="All">All Statuses</option>
+                                <option value="Active">Active</option>
+                                <option value="On Leave">On Leave</option>
+                                <option value="Terminated">Terminated</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Directory Panel -->
+                <div class="table-container glass">
+                    <table class="employee-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortDirectory('id')" id="th-id">ID <span class="sort-indicator asc"></span></th>
+                                <th onclick="sortDirectory('firstName')" id="th-name">Name</th>
+                                <th onclick="sortDirectory('email')" id="th-email">Email</th>
+                                <th onclick="sortDirectory('department')" id="th-dept">Department</th>
+                                <th onclick="sortDirectory('role')" id="th-role">Role</th>
+                                <th onclick="sortDirectory('salary')" id="th-salary">Salary</th>
+                                <th onclick="sortDirectory('joiningDate')" id="th-joining">Joined</th>
+                                <th onclick="sortDirectory('status')" id="th-status">Status</th>
+                                <th class="actions-header">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employee-table-body">
+                            <!-- Populated dynamically -->
+                            <tr>
+                                <td colspan="9" class="table-loading">Loading records from REST service...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Bulk Utilities View -->
+            <section id="view-utilities" class="tab-view">
+                <div class="utilities-grid">
+                    <!-- Export Box -->
+                    <div class="utility-card glass">
+                        <div class="u-icon-wrapper green">
+                            <svg viewBox="0 0 24 24" class="u-icon"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                        </div>
+                        <h3>Bulk Export Database</h3>
+                        <p>Generate and download a CSV containing all current employee records stored in the database.</p>
+                        <a href="/api/employees/export" class="utility-btn btn-green">
+                            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            Export CSV File
+                        </a>
+                    </div>
+
+                    <!-- Import Box -->
+                    <div class="utility-card glass">
+                        <div class="u-icon-wrapper purple">
+                            <svg viewBox="0 0 24 24" class="u-icon"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                        </div>
+                        <h3>Bulk Import Database</h3>
+                        <p>Upload a CSV file containing employee details to bulk load into the system database.</p>
+                        
+                        <form id="csv-upload-form" class="csv-upload-zone" onsubmit="handleCsvImport(event)">
+                            <div class="upload-inner">
+                                <svg viewBox="0 0 24 24" class="upload-zone-icon"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                <span>Choose CSV File or Drag Here</span>
+                            </div>
+                            <input type="file" id="csv-file-input" accept=".csv" required onchange="updateUploadLabel(this)">
+                            <button type="submit" class="utility-btn btn-purple">
+                                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                                Upload and Parse
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add/Edit Employee Modal -->
+    <div id="employee-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Employee</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+            <form id="employee-form" onsubmit="handleFormSubmit(event)">
+                <input type="hidden" id="employee-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emp-firstName">First Name</label>
+                        <input type="text" id="emp-firstName" required placeholder="John">
+                    </div>
+                    <div class="form-group">
+                        <label for="emp-lastName">Last Name</label>
+                        <input type="text" id="emp-lastName" required placeholder="Doe">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emp-email">Email Address</label>
+                        <input type="email" id="emp-email" required placeholder="john.doe@company.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="emp-phone">Phone Number</label>
+                        <input type="text" id="emp-phone" placeholder="+1-555-0100">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emp-department">Department</label>
+                        <select id="emp-department" required>
+                            <option value="Engineering">Engineering</option>
+                            <option value="HR">HR</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Finance">Finance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="emp-role">Role / Job Title</label>
+                        <input type="text" id="emp-role" required placeholder="Senior Engineer">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emp-salary">Annual Salary ($)</label>
+                        <input type="number" id="emp-salary" min="0" step="1000" required placeholder="80000">
+                    </div>
+                    <div class="form-group">
+                        <label for="emp-joiningDate">Joining Date</label>
+                        <input type="date" id="emp-joiningDate" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="emp-status">Employment Status</label>
+                    <select id="emp-status" required>
+                        <option value="Active">Active</option>
+                        <option value="On Leave">On Leave</option>
+                        <option value="Terminated">Terminated</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="btn-save">Save Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
