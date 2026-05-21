@@ -15,40 +15,28 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn -B clean package -DskipTests'
-                    } else {
-                        bat 'mvn -B clean package -DskipTests'
-                    }
-                }
-            }
+    steps {
+        dir('employee-manager') {
+            bat 'mvn -B clean package -DskipTests'
         }
+    }
+}
 
-        stage('Test') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn -B test'
-                    } else {
-                        bat 'mvn -B test'
-                    }
-                }
-            }
+        stage('Build') {
+    steps {
+        dir('employee-manager') {
+            bat 'mvn -B clean package -DskipTests'
         }
+    }
+}
 
         stage('Docker Build') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh "docker build -t ${IMAGE_NAME} ."
-                    } else {
-                        bat "docker build -t %IMAGE_NAME% ."
-                    }
-                }
-            }
+    steps {
+        dir('employee-manager') {
+            bat 'docker build -t employee-manager .'
         }
+    }
+}
 
         stage('Docker Run') {
     steps {
