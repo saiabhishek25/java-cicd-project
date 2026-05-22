@@ -131,12 +131,18 @@ async function handleFormSubmit(event) {
             body: JSON.stringify(employeeData)
         });
 
-        const result = await response.json();
-        
         if (!response.ok) {
-            throw new Error(result.error || 'Operations failed.');
+            let errorMsg = 'Operations failed.';
+            try {
+                const result = await response.json();
+                errorMsg = result.error || result.message || errorMsg;
+            } catch (e) {
+                errorMsg = `HTTP ${response.status}: ${response.statusText}`;
+            }
+            throw new Error(errorMsg);
         }
 
+        const result = await response.json();
         showToast(isEdit ? 'Employee record updated successfully.' : 'New employee registered successfully.', 'success');
         closeModal();
         

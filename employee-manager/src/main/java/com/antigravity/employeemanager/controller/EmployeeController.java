@@ -38,6 +38,13 @@ public class EmployeeController {
         return ResponseEntity.ok(employees);
     }
 
+    // Get statistical metrics for dashboard and charts
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getDashboardStats() {
+        Map<String, Object> stats = service.getDashboardStats();
+        return ResponseEntity.ok(stats);
+    }
+
     // Get a single employee
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id) {
@@ -85,13 +92,6 @@ public class EmployeeController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    // Get statistical metrics for dashboard and charts
-    @GetMapping("/stats")
-    public ResponseEntity<Map<String, Object>> getDashboardStats() {
-        Map<String, Object> stats = service.getDashboardStats();
-        return ResponseEntity.ok(stats);
     }
 
     // Export all employee records as a CSV file
