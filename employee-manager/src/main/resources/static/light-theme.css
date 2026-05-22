@@ -1,0 +1,43 @@
+/* Light theme overrides - cool blue/teal palette */
+:root {
+    --bg-canvas: #f7fbff; /* subtle cool canvas */
+    --bg-sidebar: #ffffff;
+    --bg-glass: rgba(255, 255, 255, 0.94);
+    --border-glass: rgba(3, 105, 161, 0.06);
+    --border-glass-hover: rgba(3, 105, 161, 0.12);
+    --primary: #0ea5e9; /* sky blue */
+    --primary-glow: rgba(14,165,233,0.14);
+    --secondary: #06b6d4; /* cyan */
+    --secondary-glow: rgba(6,182,212,0.10);
+    --text-main: #06243a; /* cool deep navy */
+    --text-muted: #4b6b82;
+    --text-dimmed: #7b8c99;
+    --color-active: #059669;
+    --color-leave: #d97706;
+    --color-terminated: #dc2626;
+    --shadow-main: 0 10px 30px rgba(11, 50, 80, 0.06);
+}
+
+/* Minor overrides for elements that used hard-coded dark/light overlays */
+.sidebar { background: var(--bg-sidebar) !important; border: 1px solid var(--border-glass) !important; }
+.metric-card { background: linear-gradient(180deg, rgba(6,35,58,0.02), rgba(6,35,58,0.01)) !important; }
+#filter-search, .select-wrapper select { background: rgba(6,35,58,0.02) !important; }
+.employee-table tbody tr { background: rgba(6,35,58,0.02) !important; }
+.employee-table tbody tr:hover { background: rgba(6,35,58,0.04) !important; }
+.h2-console-btn { background: transparent !important; }
+
+/* Logo and visual accents for cool aesthetic */
+.logo-icon {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    box-shadow: 0 8px 24px rgba(14,165,233,0.12) !important;
+    color: white !important;
+}
+
+/* Make toast container text dark */
+.toast-container { color: var(--text-main); }
+
+/* Buttons and small controls tuned to cool palette */
+.add-employee-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)) !important; color: white !important; box-shadow: 0 8px 20px var(--primary-glow) !important; }
+.live-time { background: rgba(14,165,233,0.06) !important; border: 1px solid rgba(14,165,233,0.12) !important; color: var(--primary) !important; }
+.h2-console-btn:hover { background: linear-gradient(90deg, rgba(14,165,233,0.06), rgba(6,182,212,0.04)) !important; color: var(--text-main) !important; }
+
